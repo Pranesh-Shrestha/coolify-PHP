@@ -1,0 +1,50 @@
+name: php build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  contents: write
+  packages: read
+
+jobs:
+  php-application-build:
+    runs-on: ubuntu-latest
+    name: Run build with anomalies
+    steps:
+      - name: Setup PSE
+        uses: invisirisk/pse-action@latest
+        with:
+          api_url: "https://app.invisirisk.com"
+          app_token: ${{ secrets.IR_API_KEY_L_PROD }}
+
+      - uses: actions/checkout@v4
+      
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          
+      - name: Install project dependencies
+        run: composer install
+
+      - name: Cleanup PSE
+        if: always()
+        uses: invisirisk/pse-action@latest
+        with:
+          cleanup: "true"
+
+  gather_analytics:
+   runs-on: ubuntu-latest
+   name: Gather Analytics
+   needs: php-application-build
+   if: always()
+   steps:
+   - name: Gather Status
+     uses: invisirisk/pse-action@latest
+     with:
+      api_url: "https://app.invisirisk.com"
+      app_token: ${{ secrets.IR_API_KEY_L_PROD }}
+      send_job_status: "true"
+      debug: "true"
