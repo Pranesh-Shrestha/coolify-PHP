@@ -14,10 +14,10 @@ jobs:
     name: Run build with anomalies
     steps:
       - name: Setup PSE
-        uses: invisirisk/pse-action@dev-test
+        uses: invisirisk/pse-action@latest
         with:
-          api_url: "https://app.stage.invisirisk.com"
-          app_token: ${{ secrets.IR_API_KEY_L_STAGE }}
+          api_url: "https://app.invisirisk.com"
+          app_token: ${{ secrets.IR_API_KEY_L_PROD }}
 
       - uses: actions/checkout@v4
       
@@ -31,7 +31,7 @@ jobs:
 
       - name: Cleanup PSE
         if: always()
-        uses: invisirisk/pse-action@dev-test
+        uses: invisirisk/pse-action@latest
         with:
           cleanup: "true"
 
@@ -42,9 +42,9 @@ jobs:
    if: always()
    steps:
    - name: Gather Status
-     uses: invisirisk/pse-action@dev-test
+     uses: invisirisk/pse-action@latest
      with:
-      api_url: "https://app.stage.invisirisk.com"
-      app_token: ${{ secrets.IR_API_KEY_L_STAGE }}
+      api_url: "https://app.invisirisk.com"
+      app_token: ${{ secrets.IR_API_KEY_L_PROD }}
       send_job_status: "true"
       debug: "true"
